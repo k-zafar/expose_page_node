@@ -1,0 +1,10 @@
+id: expose_page_node
+plugin_id: expose_page_node
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

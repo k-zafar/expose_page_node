@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Alter Site information forms to add Site API key field.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function expose_page_node_form_system_site_information_settings_alter(&$form, FormStateInterface $form_state, $form_id) {
+	// Fetching Site API key value and initializind defualt value
+	$site_api_key_raw = \Drupal::configFactory()->getEditable('system.site')->get('siteapikey');
+	$site_api_key_default_value = ( $site_api_key_raw == '') ? 'No API Key yet' : $site_api_key_raw;
+
+	// Site API key field
+	$form['site_information']['site_api_key'] = [
+		'#type' => 'textfield',
+    '#title' => t("Site API Key"),
+    '#default_value' => $site_api_key_default_value
+	];
+
+	// Adding custom submit form to save Site API key value
+	$form['#submit'][] = 'expose_page_node_form_system_site_information_settings_submit';
+	
+	// Changing button text
+	$form['actions']['submit']['#value'] = t('Update Configuration');
+
+}
+
+function expose_page_node_form_system_site_information_settings_submit(array &$form, FormStateInterface $form_state) {
+	// Saving Site API key
+	\Drupal::configFactory()->getEditable('system.site')
+    ->set('siteapikey', $form_state->getValue('site_api_key'))
+    ->save();
+
+  // Setting success message 
+  \Drupal::messenger()->addStatus(t('The Site API Key has been saved successfully.'));
+}

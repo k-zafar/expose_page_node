@@ -1,0 +1,8 @@
+name: Expose Page Node
+type: module
+description: This module exposes page type node with API.
+
+core: 8.x
+dependencies:
+  - drupal:node
+  - drupal:serialization
